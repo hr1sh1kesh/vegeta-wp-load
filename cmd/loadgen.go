@@ -33,9 +33,11 @@ var loadgenCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(loadgenCmd)
-	loadgenCmd.PersistentFlags().IntVarP(&rate, "rate", "n", 10, "Request Rate per second")
+	loadgenCmd.PersistentFlags().StringVarP(&api, "api", "a", "", "provide the API endpoint to be load tested")
+	loadgenCmd.MarkFlagRequired("api")
+	loadgenCmd.PersistentFlags().IntVarP(&rate, "rate", "n", 1, "Request Rate per second")
 	loadgenCmd.MarkFlagRequired("rate")
-	loadgenCmd.PersistentFlags().IntVarP(&duration, "duration", "d", 200, "Duration in seconds")
+	loadgenCmd.PersistentFlags().IntVarP(&duration, "duration", "d", 1, "Duration in seconds")
 	loadgenCmd.MarkFlagRequired("duration")
 	loadgenCmd.PersistentFlags().StringVarP(&user, "user", "u", "", "Username")
 	loadgenCmd.MarkFlagRequired("user")
@@ -44,6 +46,7 @@ func init() {
 }
 
 func loadGenerator(cmd *cobra.Command, args []string) {
+
 	creds := user + ":" + password
 	src.GenerateLoadData(rate, duration, api, creds)
 }
