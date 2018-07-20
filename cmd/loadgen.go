@@ -15,7 +15,7 @@
 package cmd
 
 import (
-	"github.com/hr1sh1kesh/wp-attack/src"
+	"github.com/hr1sh1kesh/vegeta-wp-load/src"
 	"github.com/spf13/cobra"
 )
 

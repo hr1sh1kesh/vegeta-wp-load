@@ -11,7 +11,7 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
-	vegeta "github.com/vegeta/lib"
+	vegeta "github.com/tsenart/vegeta/lib"
 )
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -35,7 +35,6 @@ func GenerateLoadData(count int, duration int, api string, creds string) {
 	auth := b64.StdEncoding.EncodeToString([]byte(creds))
 	numberOfTargets := count * duration
 
-	fmt.Println("Generating LoadData for number of requests", count, api)
 	var targets []vegeta.Target
 
 	rand.Seed(time.Now().UnixNano())
@@ -54,13 +53,18 @@ func GenerateLoadData(count int, duration int, api string, creds string) {
 
 	var metrics vegeta.Metrics
 	var results vegeta.Results
-	for res := range attacker.Attack(vegeta.NewStaticTargeter(targets...), rate, du, "wp-load") {
-		fmt.Println(res.Error)
+
+	t := time.Now()
+	loadTest := fmt.Sprintf("%d-%02d-%02dT%02d:%02d:%02d-00:00\n",
+		t.Year(), t.Month(), t.Day(),
+		t.Hour(), t.Minute(), t.Second())
+
+	for res := range attacker.Attack(vegeta.NewStaticTargeter(targets...), rate, du, loadTest) {
 		results.Add(res)
 		metrics.Add(res)
 	}
 	var b bytes.Buffer
-	plotReporter := vegeta.NewPlotReporter("wp-load-test", &results)
+	plotReporter := vegeta.NewPlotReporter("wp-load-test"+loadTest, &results)
 	err := plotReporter(&b)
 	check(err)
 

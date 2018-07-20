@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/hr1sh1kesh/wp-attack/cmd"
+import "github.com/hr1sh1kesh/vegeta-wp-load/cmd"
 
 func main() {
 	cmd.Execute()
